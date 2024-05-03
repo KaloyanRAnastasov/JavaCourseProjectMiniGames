@@ -1,0 +1,52 @@
+package games.example;
+
+import game.Game;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+
+public class ExampleGame extends Game {
+    private JPanel panel;
+
+    public ExampleGame() {
+        panel = new JPanel();
+        panel.add(new JLabel("Welcome to Game 1!"));
+        JButton returnButton = new JButton("Return to Main Menu");
+        returnButton.addActionListener(this::onReturnClicked);
+        panel.add(returnButton);
+    }
+
+    private void onReturnClicked(ActionEvent e) {
+        // Logic to switch back to the main menu
+        System.out.println("Return to main menu.");
+        notifyClose();
+    }
+
+    @Override
+    public JPanel getGamePanel() {
+        return panel;
+    }
+
+    @Override
+    public String getGameName() {
+        return "Game 1";
+    }
+
+    @Override
+    public ImageIcon getGameIcon() {
+        String imagePath = "/games/example/resources/sweeper.png";
+        java.net.URL imgURL = getClass().getResource(imagePath);
+        assert imgURL != null;
+        return new ImageIcon(imgURL);
+    }
+
+    @Override
+    public int getPreferredWidth() {
+        return 1024;
+    }
+
+    @Override
+    public int getPreferredHeight() {
+        return 768;
+    }
+}
