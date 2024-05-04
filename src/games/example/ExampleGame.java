@@ -1,6 +1,8 @@
 package games.example;
 
 import game.Game;
+import game.GameEndListener;
+import game.GameStartListener;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -8,12 +10,31 @@ import java.awt.event.ActionEvent;
 public class ExampleGame extends Game {
     private JPanel panel;
 
+    private GameEndListener endListener = new GameEndListener() {
+        @Override
+        public void endGame() {
+            System.out.println("endGame event");
+            // here is a code to dispose game resources
+        }
+    };
+
+    private GameStartListener startListener = new GameStartListener() {
+        @Override
+        public void startGame(){
+            System.out.println("startGame event");
+            // here is a code to init game and game logic and to load resources
+        }
+
+    };
+
     public ExampleGame() {
         panel = new JPanel();
         panel.add(new JLabel("Welcome to Game 1!"));
         JButton returnButton = new JButton("Return to Main Menu");
         returnButton.addActionListener(this::onReturnClicked);
         panel.add(returnButton);
+        setStartListener(startListener);
+        setEndListener(endListener);
     }
 
     private void onReturnClicked(ActionEvent e) {

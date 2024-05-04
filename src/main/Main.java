@@ -11,6 +11,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 public class Main {
@@ -64,6 +66,23 @@ public class Main {
 
     private static void openGameInModalFrame(Game game) {
         JDialog dialog = new JDialog(frame, game.getGameName(), Dialog.ModalityType.APPLICATION_MODAL);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+        dialog.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e){
+                System.out.println("Dialog is opened");
+                game.notifyStart();
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+                game.notifyEnd();
+                System.out.println("Dialog has closed");
+                // Actions to perform after the dialog is fully closed
+            }
+        });
+
         game.setCloseListener(new GameCloseListener() {
             @Override
             public void closeGame() {
