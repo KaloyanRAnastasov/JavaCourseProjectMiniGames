@@ -11,6 +11,7 @@ public class ExampleGame extends Game {
     private JPanel panel;
 
     private GameEndListener endListener = new GameEndListener() {
+        //test
         @Override
         public void endGame() {
             System.out.println("endGame event");
