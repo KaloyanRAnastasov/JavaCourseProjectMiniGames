@@ -7,6 +7,7 @@ public class GameManager {
     public static List<Game> loadGames() {
         List<Game> games = new ArrayList<>();
         games.add(new games.example.ExampleGame());
+        games.add(new games.tictactoe.TicTacToeGame());
         return games;
     }
 }
