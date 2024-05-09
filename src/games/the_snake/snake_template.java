@@ -1,4 +1,4 @@
-package games.example;
+package games.the_snake;
 
 import game.Game;
 import game.GameEndListener;
@@ -7,7 +7,7 @@ import game.GameStartListener;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class ExampleGame extends Game {
+public class snake_template extends Game {
     private JPanel panel;
 
     private GameEndListener endListener = new GameEndListener() {
@@ -27,7 +27,7 @@ public class ExampleGame extends Game {
 
     };
 
-    public ExampleGame() {
+    public snake_template() {
         panel = new JPanel();
         panel.add(new JLabel("Welcome to Game 1!"));
         JButton returnButton = new JButton("Return to Main Menu");
