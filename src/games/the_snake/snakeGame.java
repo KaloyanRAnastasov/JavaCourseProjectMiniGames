@@ -7,8 +7,9 @@ import game.GameStartListener;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class snake_template extends Game {
-    private JPanel panel;
+public class snakeGame extends Game {
+    private final snake snakeGame;
+
 
     private GameEndListener endListener = new GameEndListener() {
         @Override
@@ -27,12 +28,8 @@ public class snake_template extends Game {
 
     };
 
-    public snake_template() {
-        panel = new JPanel();
-        panel.add(new JLabel("Welcome to Game 1!"));
-        JButton returnButton = new JButton("Return to Main Menu");
-        returnButton.addActionListener(this::onReturnClicked);
-        panel.add(returnButton);
+    public snakeGame() {
+        snakeGame = new snake();
         setStartListener(startListener);
         setEndListener(endListener);
     }
@@ -45,17 +42,17 @@ public class snake_template extends Game {
 
     @Override
     public JPanel getGamePanel() {
-        return panel;
+        return snakeGame;
     }
 
     @Override
     public String getGameName() {
-        return "Game 1";
+        return "SnakeGame";
     }
 
     @Override
     public ImageIcon getGameIcon() {
-        String imagePath = "/games/example/resources/sweeper.png";
+        String imagePath = "/games/the_snake/snake_resources/snake_pic.png";
         java.net.URL imgURL = getClass().getResource(imagePath);
         assert imgURL != null;
         return new ImageIcon(imgURL);
@@ -63,11 +60,11 @@ public class snake_template extends Game {
 
     @Override
     public int getPreferredWidth() {
-        return 1024;
+        return 600;
     }
 
     @Override
     public int getPreferredHeight() {
-        return 768;
+        return 600;
     }
 }

@@ -97,6 +97,4 @@ public class Main {
         dialog.setVisible(true);
 
     }
-
-
 }

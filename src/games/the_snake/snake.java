@@ -7,9 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Random;
-//import game.Game;
-//import game.GameEndListener;
-//import game.GameStartListener;
 
 public class snake extends JPanel implements ActionListener {
     static final int SCREEN_WIDTH = 600;
@@ -27,6 +24,7 @@ public class snake extends JPanel implements ActionListener {
     boolean running = false;
     Timer timer;
     Random random;
+    JPanel frame = new JPanel();
     snake() {
         random =  new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
@@ -186,3 +184,5 @@ public class snake extends JPanel implements ActionListener {
         }
     }
 }
+
+
