@@ -60,11 +60,11 @@ public class snakeGame extends Game {
 
     @Override
     public int getPreferredWidth() {
-        return 600;
+        return 625;
     }
 
     @Override
     public int getPreferredHeight() {
-        return 600;
+        return 625;
     }
 }
