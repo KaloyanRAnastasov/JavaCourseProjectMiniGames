@@ -5,6 +5,7 @@ import  java.awt.event.*;
 import  java.util.*;
 import  javax.swing.*;
 
+//frame, buttons and title
 public class TicTacToe implements  ActionListener{
 
     Random random = new Random();
@@ -14,6 +15,8 @@ public class TicTacToe implements  ActionListener{
     JLabel textfield = new JLabel();
     JButton[] buttons = new JButton[9];
     boolean player_turn;
+    boolean gamePaused=false;
+    JPanel pauseScr= new JPanel();
 
 
     //Frame,buttons and title for the game
@@ -23,6 +26,7 @@ public class TicTacToe implements  ActionListener{
         frame.setBackground(Color.WHITE);
         frame.setLayout(new BorderLayout());
         frame.setVisible(true);
+        frame.add(pauseScr);
 
         textfield.setBackground(Color.BLACK);
         textfield.setForeground(Color.CYAN);
@@ -48,12 +52,35 @@ public class TicTacToe implements  ActionListener{
             buttons[i].addActionListener(this);
         }
 
-        firstTurn();
-    }
+
+
+            // Add key listener to the frame
+            frame.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                        if (gamePaused) {
+                            resumeGame();
+                        } else {
+                            pauseGame();
+                        }
+                    }
+                }
+            });
+
+            // focus the  frame to receive key events
+            frame.setFocusable(true);
+            frame.requestFocusInWindow();
+
+            firstTurn();
+        }
 
     //check each of the buttons if there is text inside(X or O ) in a button
     @Override
     public void actionPerformed(ActionEvent e) {
+        if(gamePaused){
+            return;
+        }
         for (int i = 0; i < 9; i++) {
             if (e.getSource() == buttons[i]) {
                 if (player_turn) {
@@ -193,4 +220,24 @@ public class TicTacToe implements  ActionListener{
         }
         return true;
     }
+
+    // Pause the game
+    public void pauseGame() {
+        gamePaused = true;
+        pauseScr.setVisible(true);
+        textfield.setText("Game Paused");
+    }
+
+    // Resume the game
+    public void resumeGame() {
+        gamePaused = false;
+        pauseScr.setVisible(false);
+        if (player_turn) {
+            textfield.setText("X turn");
+        } else {
+            textfield.setText("O turn");
+        }
+    }
+
+
 }
