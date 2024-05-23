@@ -7,8 +7,11 @@ import game.GameStartListener;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class snakeGame extends Game {
-    private final snake snakeGame;
+import static games.the_snake.Snake.SCREEN_HEIGHT;
+import static games.the_snake.Snake.SCREEN_WIDTH;
+
+public class SnakeGame extends Game {
+    private final Snake SnakeGame;
 
 
     private GameEndListener endListener = new GameEndListener() {
@@ -28,8 +31,8 @@ public class snakeGame extends Game {
 
     };
 
-    public snakeGame() {
-        snakeGame = new snake();
+    public SnakeGame() {
+        SnakeGame = new Snake();
         setStartListener(startListener);
         setEndListener(endListener);
     }
@@ -42,7 +45,7 @@ public class snakeGame extends Game {
 
     @Override
     public JPanel getGamePanel() {
-        return snakeGame;
+        return SnakeGame;
     }
 
     @Override
@@ -60,11 +63,11 @@ public class snakeGame extends Game {
 
     @Override
     public int getPreferredWidth() {
-        return 625;
+        return SCREEN_WIDTH;
     }
 
     @Override
     public int getPreferredHeight() {
-        return 625;
+        return SCREEN_HEIGHT;
     }
 }

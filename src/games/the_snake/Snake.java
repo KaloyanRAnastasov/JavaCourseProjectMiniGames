@@ -8,9 +8,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
-public class snake extends JPanel implements ActionListener {
-    static final int SCREEN_WIDTH = 625;
-    static final int SCREEN_HEIGHT = 625;
+public class Snake extends JPanel implements ActionListener {
+    static final int SCREEN_WIDTH = 600;
+    static final int SCREEN_HEIGHT = 600;
     static final int UNIT_SIZE = 25;
     static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT) / UNIT_SIZE;
     static final int DELAY = 90;
@@ -26,7 +26,7 @@ public class snake extends JPanel implements ActionListener {
     Timer timer;
     Random random;
 
-    snake() {
+    Snake() {
         random = new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
@@ -65,7 +65,7 @@ public class snake extends JPanel implements ActionListener {
     public void draw(Graphics g) {
         if (running) {
             if (!paused) {
-                for (int i = 0; i <= SCREEN_WIDTH / UNIT_SIZE; i++) {
+                for (int i = 0; i <= (SCREEN_WIDTH / UNIT_SIZE); i++) {
                     g.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
                     g.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
                 }
