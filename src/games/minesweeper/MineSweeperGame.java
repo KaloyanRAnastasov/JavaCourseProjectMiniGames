@@ -53,12 +53,12 @@ public class MineSweeperGame extends Game {
 
     @Override
     public String getGameName() {
-        return "Game 1";
+        return minesweeper.getTitle();
     }
 
     @Override
     public ImageIcon getGameIcon() {
-        String imagePath = "/games/example/resources/sweeper.png";
+        String imagePath = "/games/minesweeper/resources/Minesweeper_flag.png";
         java.net.URL imgURL = getClass().getResource(imagePath);
         assert imgURL != null;
         return new ImageIcon(imgURL);
@@ -71,6 +71,6 @@ public class MineSweeperGame extends Game {
 
     @Override
     public int getPreferredHeight() {
-        return 768;
+        return 1024;
     }
 }
