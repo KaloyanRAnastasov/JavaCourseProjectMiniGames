@@ -90,11 +90,13 @@ public class TicTacToe implements  ActionListener{
                         player_turn = false;
                         textfield.setText("O turn");
                         check();
-                        if (checkForDraw()) {
-                            for (JButton button : buttons) {
-                                button.setEnabled(false);
+                        if (!textfield.getText().equals("X wins")) {
+                            if (checkForDraw()) {
+                                for (JButton button : buttons) {
+                                    button.setEnabled(false);
+                                }
+                                textfield.setText("Draw");
                             }
-                            textfield.setText("Draw");
                         }
                     }
                 } else {
@@ -104,11 +106,13 @@ public class TicTacToe implements  ActionListener{
                         player_turn = true;
                         textfield.setText("X turn");
                         check();
-                        if (checkForDraw()) {
-                            for (JButton button : buttons) {
-                                button.setEnabled(false);
+                        if (!textfield.getText().equals("O wins")) {
+                            if (checkForDraw()) {
+                                for (JButton button : buttons) {
+                                    button.setEnabled(false);
+                                }
+                                textfield.setText("Draw");
                             }
-                            textfield.setText("Draw");
                         }
                     }
                 }
@@ -116,6 +120,10 @@ public class TicTacToe implements  ActionListener{
         }
     }
 
+    //used for the test in TicTacToeTest
+public boolean isPlayerTurn(){
+        return player_turn;
+}
     // label for each turn
     public void firstTurn(){
         try {
