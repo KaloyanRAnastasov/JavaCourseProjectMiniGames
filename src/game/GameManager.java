@@ -8,7 +8,8 @@ public class GameManager {
         List<Game> games = new ArrayList<>();
         games.add(new games.example.ExampleGame());
         games.add(new games.tictactoe.TicTacToeGame());
-        games.add(new games.the_snake.snakeGame());
+        games.add(new games.the_snake.SnakeGame());
+        games.add(new games.minesweeper.MineSweeperGame());
         return games;
     }
 }
