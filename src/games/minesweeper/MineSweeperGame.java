@@ -48,7 +48,7 @@ public class MineSweeperGame extends Game {
 
     @Override
     public JPanel getGamePanel() {
-        return minesweeper.panel;
+        return minesweeper.getPanel();
     }
 
     @Override

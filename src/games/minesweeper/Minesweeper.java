@@ -14,7 +14,7 @@ import java.util.Random;
 public class Minesweeper extends JFrame {
     private static final int SIZE = 10;
     private static final int MINES = 10;
-    public JPanel panel;
+    private JPanel panel;
     private JButton[][] buttons;
     private boolean[][] mines;
     private boolean[][] revealed;
@@ -157,6 +157,11 @@ public class Minesweeper extends JFrame {
         if (revealedCells == SIZE * SIZE - MINES) {
             JOptionPane.showMessageDialog(null, "You Win!");
         }
+    }
+
+    public JPanel getPanel()
+    {
+        return panel;
     }
 
 }
