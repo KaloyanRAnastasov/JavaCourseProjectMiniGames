@@ -2,13 +2,12 @@ package games.the_snake;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import java.awt.event.ActionEvent;
-
 import static org.junit.Assert.*;
 
 public class SnakeTest {
     private Snake snake;
+
 
     @Before
     public void setUp() {
@@ -35,6 +34,14 @@ public class SnakeTest {
         assertEquals(0, snake.applesEaten);
         assertEquals('R', snake.direction);
         assertTrue(snake.timer.isRunning());
+    }
+
+    @Test
+    public void paintComponent() {
+    }
+
+    @Test
+    public void draw() {
     }
 
     @Test
@@ -75,10 +82,13 @@ public class SnakeTest {
     }
 
     @Test
+    public void gameOver() {
+    }
+
+    @Test
     public void actionPerformed() {
         snake.startGame();
         ActionEvent e = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null);
         snake.actionPerformed(e);
-        // Ensure game logic is processed and repaint is called. No direct assertion.
     }
 }

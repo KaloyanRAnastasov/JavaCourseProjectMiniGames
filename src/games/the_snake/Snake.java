@@ -12,7 +12,7 @@ public class Snake extends JPanel implements ActionListener {
     static final int SCREEN_WIDTH = 600;
     static final int SCREEN_HEIGHT = 600;
     static final int UNIT_SIZE = 25;
-    static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT) / UNIT_SIZE;
+    static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT) / (UNIT_SIZE * UNIT_SIZE);
     static final int DELAY = 90;
     final int x[] = new int[GAME_UNITS];
     final int y[] = new int[GAME_UNITS];
@@ -109,15 +109,27 @@ public class Snake extends JPanel implements ActionListener {
         switch (direction) {
             case 'U':
                 y[0] = y[0] - UNIT_SIZE;
+                if (y[0] < 0) {
+                    y[0] = SCREEN_HEIGHT - UNIT_SIZE;
+                }
                 break;
             case 'D':
                 y[0] = y[0] + UNIT_SIZE;
+                if (y[0] >= SCREEN_HEIGHT) {
+                    y[0] = 0;
+                }
                 break;
             case 'L':
                 x[0] = x[0] - UNIT_SIZE;
+                if (x[0] < 0) {
+                    x[0] = SCREEN_WIDTH - UNIT_SIZE;
+                }
                 break;
             case 'R':
                 x[0] = x[0] + UNIT_SIZE;
+                if (x[0] >= SCREEN_WIDTH) {
+                    x[0] = 0;
+                }
                 break;
         }
     }
@@ -136,10 +148,6 @@ public class Snake extends JPanel implements ActionListener {
                 running = false;
             }
         }
-        if (x[0] < 0 || x[0] >= SCREEN_WIDTH || y[0] < 0 || y[0] >= SCREEN_HEIGHT) {
-            running = false;
-        }
-
         if (!running) {
             timer.stop();
         }
