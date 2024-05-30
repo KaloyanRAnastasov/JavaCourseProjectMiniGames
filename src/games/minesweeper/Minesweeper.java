@@ -118,7 +118,7 @@ public class Minesweeper extends JFrame {
         }
     }
 
-    private void reveal(int x, int y) {
+    public void reveal(int x, int y) {
         if (x < 0 || x >= SIZE || y < 0 || y >= SIZE || revealed[x][y]) {
             return;
         }
@@ -140,11 +140,9 @@ public class Minesweeper extends JFrame {
             }
         }
     }
-    public void getReveal(int x, int y) {
-        reveal(x, y);
-    }
 
-    private int countAdjacentMines(int x, int y) {
+
+    public int countAdjacentMines(int x, int y) {
         int count = 0;
 
         for (int i = -1; i <= 1; i++) {
@@ -160,9 +158,7 @@ public class Minesweeper extends JFrame {
 
         return count;
     }
-    public int getCountAdjacentMines(int x, int y) {
-        return countAdjacentMines(x, y);
-    }
+
 
     private void revealAllMines() {
         for (int i = 0; i < SIZE; i++) {
