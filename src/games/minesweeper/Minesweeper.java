@@ -60,6 +60,31 @@ public class Minesweeper extends JFrame {
         }
     }
 
+    // Getter methods
+    public static int getCurrentSize() {
+        return SIZE;
+    }
+
+    public static int getMines() {
+        return MINES;
+    }
+    public JButton[][] getButtons() {
+        return buttons;
+    }
+
+    public boolean[][] getMinesArray() {
+        return mines;
+    }
+
+    public boolean[][] getRevealed() {
+        return revealed;
+    }
+
+    public boolean[][] getFlagged() {
+        return flagged;
+    }
+
+
     private class ButtonMouseListener extends MouseAdapter {
         private int x;
         private int y;
@@ -115,6 +140,9 @@ public class Minesweeper extends JFrame {
             }
         }
     }
+    public void getReveal(int x, int y) {
+        reveal(x, y);
+    }
 
     private int countAdjacentMines(int x, int y) {
         int count = 0;
@@ -132,6 +160,9 @@ public class Minesweeper extends JFrame {
 
         return count;
     }
+    public int getCountAdjacentMines(int x, int y) {
+        return countAdjacentMines(x, y);
+    }
 
     private void revealAllMines() {
         for (int i = 0; i < SIZE; i++) {
@@ -142,6 +173,9 @@ public class Minesweeper extends JFrame {
                 }
             }
         }
+    }
+    public void getRevealAllMines() {
+        revealAllMines();
     }
 
     private void checkWinCondition() {
@@ -154,9 +188,13 @@ public class Minesweeper extends JFrame {
             }
         }
 
+
         if (revealedCells == SIZE * SIZE - MINES) {
             JOptionPane.showMessageDialog(null, "You Win!");
         }
+    }
+    public void getCheckWinCondition() {
+        checkWinCondition();
     }
 
     public JPanel getPanel()
