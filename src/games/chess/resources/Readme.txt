@@ -1,0 +1,1 @@
+Add resources like images, videos here in the resources package.
