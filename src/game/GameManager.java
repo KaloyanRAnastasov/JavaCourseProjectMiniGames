@@ -10,6 +10,7 @@ public class GameManager {
         games.add(new games.tictactoe.TicTacToeGame());
         games.add(new games.the_snake.SnakeGame());
         games.add(new games.minesweeper.MineSweeperGame());
+        games.add(new games.twentyfortyeight.TwentyFortyEightGame());
         return games;
     }
 }
