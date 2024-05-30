@@ -97,9 +97,22 @@ public class Snake extends JPanel implements ActionListener {
     }
 
     public void newApple() {
-        appleX = random.nextInt((SCREEN_WIDTH / UNIT_SIZE)) * UNIT_SIZE;
-        appleY = random.nextInt((SCREEN_HEIGHT / UNIT_SIZE)) * UNIT_SIZE;
+        boolean validPosition = false;
+
+        while (!validPosition) {
+            appleX = random.nextInt((SCREEN_WIDTH / UNIT_SIZE)) * UNIT_SIZE;
+            appleY = random.nextInt((SCREEN_HEIGHT / UNIT_SIZE)) * UNIT_SIZE;
+            validPosition = true;
+
+            for (int i = 0; i < bodyParts; i++) {
+                if (x[i] == appleX && y[i] == appleY) {
+                    validPosition = false;
+                    break;
+                }
+            }
+        }
     }
+
 
     public void move() {
         for (int i = bodyParts; i > 0; i--) {
