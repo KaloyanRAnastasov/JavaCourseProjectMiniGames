@@ -7,9 +7,6 @@ import game.GameStartListener;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-import static games.the_snake.Snake.SCREEN_HEIGHT;
-import static games.the_snake.Snake.SCREEN_WIDTH;
-
 public class SnakeGame extends Game {
     private final Snake SnakeGame;
 
@@ -63,11 +60,11 @@ public class SnakeGame extends Game {
 
     @Override
     public int getPreferredWidth() {
-        return SCREEN_WIDTH;
+        return 616;
     }
 
     @Override
     public int getPreferredHeight() {
-        return SCREEN_HEIGHT;
+        return 640;
     }
 }
