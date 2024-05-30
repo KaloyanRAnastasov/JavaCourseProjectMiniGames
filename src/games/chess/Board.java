@@ -7,6 +7,9 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +43,7 @@ public class Board extends JPanel {
         setBackground(new Color(43, 43, 43)); // Dark background color
         squareSize = calculateSquareSize();
         initializeBoard();
-        initializeStartingPositions();
+        setupNewGame();
         initializeControlButtons();
     }
 
@@ -169,117 +172,8 @@ public class Board extends JPanel {
         return true;
     }
 
-    private void promotePawn(int row, int col, String newPiece, JDialog promotionDialog) {
-        String color = boardState[row][col][0];
-        boardState[row][col][1] = newPiece;
-        String imageName = color + newPiece + ".png";
-        squares[row][col].setIcon(createImageIcon(imageName));
-        promotionDialog.dispose();
-    }
-
-    private void performCastling(boolean isLong) {
-        if (isWhiteTurn) {
-            if (isLong) {
-                if (!whiteRooksMoved[0] && areSquaresEmptyAndSafe(7, 1, 3)) {
-                    // White Queen-side castling
-                    movePiece(7, 4, 7, 2);
-                    movePiece(7, 0, 7, 3);
-                    whiteCastled = true;
-                }
-            } else {
-                if (!whiteRooksMoved[1] && areSquaresEmptyAndSafe(7, 5, 6)) {
-                    // White King-side castling
-                    movePiece(7, 4, 7, 6);
-                    movePiece(7, 7, 7, 5);
-                    whiteCastled = true;
-                }
-            }
-        } else {
-            if (isLong) {
-                if (!blackRooksMoved[0] && areSquaresEmptyAndSafe(0, 1, 3)) {
-                    // Black Queen-side castling
-                    movePiece(0, 4, 0, 2);
-                    movePiece(0, 0, 0, 3);
-                    blackCastled = true;
-                }
-            } else {
-                if (!blackRooksMoved[1] && areSquaresEmptyAndSafe(0, 5, 6)) {
-                    // Black King-side castling
-                    movePiece(0, 4, 0, 6);
-                    movePiece(0, 7, 0, 5);
-                    blackCastled = true;
-                }
-            }
-        }
-        updateKingInCheckStatus();
-        isWhiteTurn = !isWhiteTurn; // Toggle turn only after a successful move
-        updateCastlingButtons();
-    }
-
-    private void movePiece(int startRow, int startCol, int endRow, int endCol) {
-        JButton startSquare = squares[startRow][startCol];
-        JButton endSquare = squares[endRow][endCol];
-        ImageIcon pieceIcon = (ImageIcon) startSquare.getIcon();
-
-        endSquare.setIcon(pieceIcon);
-        startSquare.setIcon(null);
-
-        boardState[endRow][endCol][0] = boardState[startRow][startCol][0];
-        boardState[endRow][endCol][1] = boardState[startRow][startCol][1];
-        boardState[startRow][startCol][0] = null;
-        boardState[startRow][startCol][1] = null;
-
-        updateEvaluationBar(); // Update evaluation bar after the move
-
-        // Check for pawn promotion
-        if ((endRow == 0 || endRow == 7) && "Pawn".equals(boardState[endRow][endCol][1])) {
-            showPromotionOptions(endRow, endCol);
-        }
-    }
-
-    private void showPromotionOptions(int row, int col) {
-        JDialog promotionDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Pawn Promotion", true);
-        promotionDialog.setLayout(new FlowLayout());
-        promotionDialog.setSize(300, 200);
-        promotionDialog.setLocationRelativeTo(this);
-
-        JButton queenButton = new JButton(createImageIcon(boardState[row][col][0] + "Queen.png"));
-        queenButton.addActionListener(e -> promotePawn(row, col, "Queen", promotionDialog));
-
-        JButton rookButton = new JButton(createImageIcon(boardState[row][col][0] + "Rook.png"));
-        rookButton.addActionListener(e -> promotePawn(row, col, "Rook", promotionDialog));
-
-        JButton bishopButton = new JButton(createImageIcon(boardState[row][col][0] + "Bishop.png"));
-        bishopButton.addActionListener(e -> promotePawn(row, col, "Bishop", promotionDialog));
-
-        JButton knightButton = new JButton(createImageIcon(boardState[row][col][0] + "Knight.png"));
-        knightButton.addActionListener(e -> promotePawn(row, col, "Knight", promotionDialog));
-
-        promotionDialog.add(queenButton);
-        promotionDialog.add(rookButton);
-        promotionDialog.add(bishopButton);
-        promotionDialog.add(knightButton);
-
-        promotionDialog.setVisible(true);
-    }
-
-    private int calculateSquareSize() {
-        int width = getWidth();
-        int height = getHeight();
-        int smallerDimension = Math.min(width, height);
-        return Math.max(smallerDimension / SIZE, MIN_SQUARE_SIZE);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        squareSize = calculateSquareSize();
-        for (int row = 0; row < SIZE; row++) {
-            for (int col = 0; col < SIZE; col++) {
-                squares[row][col].setPreferredSize(new Dimension(squareSize, squareSize));
-            }
-        }
-        revalidate();
+    public void setupNewGame() {
+        initializeStartingPositions();
     }
 
     private void initializeStartingPositions() {
@@ -348,7 +242,9 @@ public class Board extends JPanel {
                     case 1:
                     case 6:
                         return "blackKnight.png";
-                    case 2:
+                    case 2
+
+                            :
                     case 5:
                         return "blackBishop.png";
                     case 3:
@@ -383,7 +279,7 @@ public class Board extends JPanel {
     }
 
     private ImageIcon createImageIcon(String imageName) {
-        URL resource = getClass().getResource("/games/chess/Pieces/" + imageName);
+        URL resource = getClass().getResource("/games/chess/resources/Pieces/" + imageName);
         if (resource != null) {
             try {
                 Image image = ImageIO.read(resource);
@@ -573,6 +469,8 @@ public class Board extends JPanel {
     }
 
     private int getPieceValue(String piece) {
+
+
         switch (piece) {
             case "Pawn":
                 return 1;
@@ -586,6 +484,140 @@ public class Board extends JPanel {
             default:
                 return 0;
         }
+    }
+
+    private void playSound(String soundFileName) {
+        try {
+            URL soundURL = getClass().getResource("/games/chess/resources/sounds/" + soundFileName);
+            if (soundURL != null) {
+                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundURL);
+                Clip clip = AudioSystem.getClip();
+                clip.open(audioInputStream);
+                clip.start();
+            } else {
+                System.err.println("Sound file not found: " + soundFileName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void performCastling(boolean isLong) {
+        if (isWhiteTurn) {
+            if (isLong) {
+                if (!whiteRooksMoved[0] && areSquaresEmptyAndSafe(7, 1, 3)) {
+                    // White Queen-side castling
+                    movePiece(7, 4, 7, 2);
+                    movePiece(7, 0, 7, 3);
+                    whiteCastled = true;
+                }
+            } else {
+                if (!whiteRooksMoved[1] && areSquaresEmptyAndSafe(7, 5, 6)) {
+                    // White King-side castling
+                    movePiece(7, 4, 7, 6);
+                    movePiece(7, 7, 7, 5);
+                    whiteCastled = true;
+                }
+            }
+        } else {
+            if (isLong) {
+                if (!blackRooksMoved[0] && areSquaresEmptyAndSafe(0, 1, 3)) {
+                    // Black Queen-side castling
+                    movePiece(0, 4, 0, 2);
+                    movePiece(0, 0, 0, 3);
+                    blackCastled = true;
+                }
+            } else {
+                if (!blackRooksMoved[1] && areSquaresEmptyAndSafe(0, 5, 6)) {
+                    // Black King-side castling
+                    movePiece(0, 4, 0, 6);
+                    movePiece(0, 7, 0, 5);
+                    blackCastled = true;
+                }
+            }
+        }
+        playSound("castle.wav");
+        updateKingInCheckStatus();
+        isWhiteTurn = !isWhiteTurn; // Toggle turn only after a successful move
+        updateCastlingButtons();
+    }
+
+    private void promotePawn(int row, int col, String newPiece, JDialog promotionDialog) {
+        String color = boardState[row][col][0];
+        boardState[row][col][1] = newPiece;
+        String imageName = color + newPiece + ".png";
+        squares[row][col].setIcon(createImageIcon(imageName));
+        playSound("promote.wav");
+        promotionDialog.dispose();
+    }
+
+    private void movePiece(int startRow, int startCol, int endRow, int endCol) {
+        JButton startSquare = squares[startRow][startCol];
+        JButton endSquare = squares[endRow][endCol];
+        ImageIcon pieceIcon = (ImageIcon) startSquare.getIcon();
+
+        endSquare.setIcon(pieceIcon);
+        startSquare.setIcon(null);
+
+        boardState[endRow][endCol][0] = boardState[startRow][startCol][0];
+        boardState[endRow][endCol][1] = boardState[startRow][startCol][1];
+        boardState[startRow][startCol][0] = null;
+        boardState[startRow][startCol][1] = null;
+
+        playSound("move-self.wav"); // Play move sound
+
+        updateEvaluationBar(); // Update evaluation bar after the move
+
+        // Check for pawn promotion
+        if ((endRow == 0 || endRow == 7) && "Pawn".equals(boardState[endRow][endCol][1])) {
+            showPromotionOptions(endRow, endCol);
+        }
+    }
+
+    private void showPromotionOptions(int row, int col) {
+        // Use null as the parent component if you don't have a parent frame or window
+        JDialog promotionDialog = new JDialog((Window) SwingUtilities.getWindowAncestor(this), "Pawn Promotion", JDialog.ModalityType.APPLICATION_MODAL);
+        promotionDialog.setLayout(new FlowLayout());
+        promotionDialog.setSize(300, 200);
+        promotionDialog.setLocationRelativeTo(this);
+
+        JButton queenButton = new JButton(createImageIcon(boardState[row][col][0] + "Queen.png"));
+        queenButton.addActionListener(e -> promotePawn(row, col, "Queen", promotionDialog));
+
+        JButton rookButton = new JButton(createImageIcon(boardState[row][col][0] + "Rook.png"));
+        rookButton.addActionListener(e -> promotePawn(row, col, "Rook", promotionDialog));
+
+        JButton bishopButton = new JButton(createImageIcon(boardState[row][col][0] + "Bishop.png"));
+        bishopButton.addActionListener(e -> promotePawn(row, col, "Bishop", promotionDialog));
+
+        JButton knightButton = new JButton(createImageIcon(boardState[row][col][0] + "Knight.png"));
+        knightButton.addActionListener(e -> promotePawn(row, col, "Knight", promotionDialog));
+
+        promotionDialog.add(queenButton);
+        promotionDialog.add(rookButton);
+        promotionDialog.add(bishopButton);
+        promotionDialog.add(knightButton);
+
+        promotionDialog.setVisible(true);
+    }
+
+    private int calculateSquareSize() {
+        int width = getWidth();
+        int height = getHeight();
+        int smallerDimension = Math.min(width, height);
+        return Math.max(smallerDimension / SIZE, MIN_SQUARE_SIZE);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        squareSize = calculateSquareSize();
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                squares[row][col].setPreferredSize(new Dimension(squareSize, squareSize));
+            }
+        }
+        revalidate();
     }
 
     private class SquareClickListener extends MouseAdapter {
@@ -664,7 +696,9 @@ public class Board extends JPanel {
         }
 
         private boolean isLegalMove(int startRow, int startCol, int endRow, int endCol) {
-            boolean isWhite = board.isWhiteTurn;
+            boolean isWhite = board
+
+                    .isWhiteTurn;
             Point kingPos = findKing(isWhite ? "white" : "black");
 
             // Check if the piece being moved is a king
@@ -708,7 +742,6 @@ public class Board extends JPanel {
                 }
             }
             return false;
-
         }
 
         private void moveSelectedPiece(JButton clickedSquare, int clickedRow, int clickedCol) {
@@ -733,6 +766,7 @@ public class Board extends JPanel {
 
             // Check if move is legal when the king is in check or pinned
             if ((whiteKingInCheck || blackKingInCheck) && !isLegalMoveWhenInCheck(selectedRow, selectedCol, clickedRow, clickedCol)) {
+                playSound("illegal.wav");
                 System.out.println("Illegal move, king is in check or pinned");
                 return; // Illegal move
             }
@@ -762,6 +796,7 @@ public class Board extends JPanel {
 
             // Check if the move is legal considering pins
             if (!isLegalMove(selectedRow, selectedCol, clickedRow, clickedCol)) {
+                playSound("illegal.wav");
                 System.out.println("Illegal move, piece is pinned");
                 return; // Illegal move
             }
@@ -776,6 +811,8 @@ public class Board extends JPanel {
             selectedSquare.setIcon(null);  // Remove the icon from the old square
             board.selectedPiece = null;  // Deselect after move
             board.isWhiteTurn = !board.isWhiteTurn; // Toggle turn only after a successful move
+
+            playSound("move-self.wav");
 
             // Check if the king is still in check after the move
             updateKingInCheckStatus();
@@ -868,7 +905,9 @@ public class Board extends JPanel {
         }
 
         private void highlightRookMoves(int row, int col) {
-            String pieceColor = board.boardState[row][col][0];
+            String pieceColor = board.boardState
+
+                    [row][col][0];
             int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // Right, Down, Left, Up
 
             for (int[] direction : directions) {
@@ -989,8 +1028,10 @@ public class Board extends JPanel {
 
         private void checkForCheckmate() {
             if (isCheckmate("white")) {
+                playSound("game-end.wav");
                 JOptionPane.showMessageDialog(board, "Checkmate! Black wins!");
             } else if (isCheckmate("black")) {
+                playSound("game-end.wav");
                 JOptionPane.showMessageDialog(board, "Checkmate! White wins!");
             }
         }
@@ -1081,7 +1122,9 @@ public class Board extends JPanel {
             for (int offset : offsets) {
                 int targetRow = row + direction;
                 int targetCol = col + offset;
-                if (isValidMove(targetRow, targetCol)) {
+                if (isValidMove
+
+                        (targetRow, targetCol)) {
                     JButton targetSquare = board.squares[targetRow][targetCol];
                     if (targetSquare.getIcon() != null) {
                         String targetColor = boardState[targetRow][targetCol][0];
