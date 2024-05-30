@@ -7,17 +7,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Random;
+import games.minesweeper.Minesweeper;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MinesweeperTest {
-    private Minesweeper minesweeper;
+    private Minesweeper minesweeper = new Minesweeper();
 
-    @BeforeEach
-    public void setUp() {
-        minesweeper = new Minesweeper();
 
-    }
     //Setters
     JButton[][] buttons = minesweeper.getButtons();
     boolean[][] flagged = minesweeper.getFlagged();
