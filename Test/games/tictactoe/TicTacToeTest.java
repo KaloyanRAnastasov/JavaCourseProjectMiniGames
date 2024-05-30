@@ -17,7 +17,7 @@ public class TicTacToeTest  {
 
     @Test
     public void testFirstTurn() {
-        assertFalse(ticTacToe.player_turn);
+        assertTrue(ticTacToe.player_turn);
     }
 
     @Test
