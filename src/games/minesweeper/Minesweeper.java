@@ -60,7 +60,7 @@ public class Minesweeper extends JFrame {
         }
     }
 
-    // Getter methods
+
     public static int getCurrentSize() {
         return SIZE;
     }
@@ -103,7 +103,7 @@ public class Minesweeper extends JFrame {
                 }
             } else if (SwingUtilities.isLeftMouseButton(e)) {
                 if (flagged[x][y]) {
-                    return; // Do nothing if the cell is flagged
+                    return;
                 }
                 if (mines[x][y]) {
                     buttons[x][y].setText("X");
