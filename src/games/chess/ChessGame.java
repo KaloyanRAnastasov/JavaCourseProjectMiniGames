@@ -3,6 +3,7 @@ package games.chess;
 import game.Game;
 import game.GameEndListener;
 import game.GameStartListener;
+import games.chess.MainChess;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -29,7 +30,8 @@ public class ChessGame extends Game {
     };
 
     public ChessGame() {
-        panel = new JPanel();
+        MainChess chess = new MainChess();
+        panel = chess.Chess();
         panel.add(new JLabel("Welcome to Game 1!"));
         JButton returnButton = new JButton("Return to Main Menu");
         returnButton.addActionListener(this::onReturnClicked);
