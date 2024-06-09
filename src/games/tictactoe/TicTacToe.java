@@ -8,25 +8,25 @@ import  javax.swing.*;
 //frame, buttons and title
 public class TicTacToe implements  ActionListener{
 
-    Random random = new Random();
-    JPanel frame = new JPanel();
-    JPanel title = new JPanel();
-    JPanel button = new JPanel();
-    JLabel textfield = new JLabel();
-    JButton[] buttons = new JButton[9];
-    boolean player_turn;
-    boolean gamePaused=false;
-    JPanel pauseScr= new JPanel();
+    private  Random random = new Random();
+    private JPanel upperPanel = new JPanel();
+    private  JPanel title = new JPanel();
+    private  JPanel button = new JPanel();
+    private  JLabel textfield = new JLabel();
+    private  JButton[] buttons = new JButton[9];
+    private  boolean player_turn;
+    private   boolean gamePaused=false;
+    private  JPanel pauseScr= new JPanel();
 
 
     //Frame,buttons and title for the game
     TicTacToe() {
 
-        frame.setSize(800, 800);
-        frame.setBackground(Color.WHITE);
-        frame.setLayout(new BorderLayout());
-        frame.setVisible(true);
-        frame.add(pauseScr);
+        upperPanel.setSize(800, 800);
+        upperPanel.setBackground(Color.WHITE);
+        upperPanel.setLayout(new BorderLayout());
+        upperPanel.setVisible(true);
+        upperPanel.add(pauseScr);
 
         textfield.setBackground(Color.BLACK);
         textfield.setForeground(Color.CYAN);
@@ -38,8 +38,8 @@ public class TicTacToe implements  ActionListener{
         title.setLayout(new BorderLayout());
         title.setBounds(0, 0, 800, 100);
         title.add(textfield);
-        frame.add(title, BorderLayout.NORTH);
-        frame.add(button);
+        upperPanel.add(title, BorderLayout.NORTH);
+        upperPanel.add(button);
 
         button.setLayout(new GridLayout(3, 3));
         button.setBackground(new Color(150, 150, 150));
@@ -55,7 +55,7 @@ public class TicTacToe implements  ActionListener{
 
 
             // Add key listener to the frame
-            frame.addKeyListener(new KeyAdapter() {
+            upperPanel.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyPressed(KeyEvent e) {
                     if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -69,8 +69,8 @@ public class TicTacToe implements  ActionListener{
             });
 
             // focus the  frame to receive key events
-            frame.setFocusable(true);
-            frame.requestFocusInWindow();
+            upperPanel.setFocusable(true);
+            upperPanel.requestFocusInWindow();
 
             firstTurn();
         }
@@ -247,5 +247,39 @@ public boolean isPlayerTurn(){
         }
     }
 
+    public Random getRandom() {
+        return random;
+    }
 
+    public JPanel getPauseScr() {
+        return pauseScr;
+    }
+
+    public JPanel getUpperPanel() {
+        return upperPanel;
+    }
+
+    public JPanel getTitle() {
+        return title;
+    }
+
+    public JLabel getTextfield() {
+        return textfield;
+    }
+
+    public JPanel getButton() {
+        return button;
+    }
+
+    public JButton[] getButtons() {
+        return buttons;
+    }
+
+    public boolean isPlayer_turn() {
+        return player_turn;
+    }
+
+    public boolean isGamePaused() {
+        return gamePaused;
+    }
 }
