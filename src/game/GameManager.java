@@ -11,7 +11,7 @@ public class GameManager {
         games.add(new games.the_snake.SnakeGame());
         games.add(new games.minesweeper.MineSweeperGame());
         games.add(new games.twentyfortyeight.TwentyFortyEightGame());
-        games.add(new games.chess.ChessGame());
+        games.add(new games.connect4.Connect4Game());
         return games;
     }
 }
