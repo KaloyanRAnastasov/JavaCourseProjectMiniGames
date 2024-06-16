@@ -43,7 +43,7 @@ public class TicTacToeGame extends  Game {
 
     @Override
     public JPanel getGamePanel() {
-        return ticTacToe.frame;
+    return ticTacToe.getUpperPanel();
     }
 
     @Override
