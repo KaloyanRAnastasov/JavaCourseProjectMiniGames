@@ -12,24 +12,28 @@ public class TwentyFortyEightPanel extends JPanel {
 
     public TwentyFortyEightPanel() {
         setFocusable(true);
-        board = new Board();
+        board = new Board(true);
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 boolean moved = false;
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_LEFT:
-                        moved = board.move(Board.Direction.LEFT);
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        moved = board.move(Board.Direction.RIGHT);
-                        break;
-                    case KeyEvent.VK_UP:
-                        moved = board.move(Board.Direction.UP);
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        moved = board.move(Board.Direction.DOWN);
-                        break;
+                try {
+                    switch (e.getKeyCode()) {
+                        case KeyEvent.VK_LEFT:
+                            moved = board.move(Board.Direction.LEFT);
+                            break;
+                        case KeyEvent.VK_RIGHT:
+                            moved = board.move(Board.Direction.RIGHT);
+                            break;
+                        case KeyEvent.VK_UP:
+                            moved = board.move(Board.Direction.UP);
+                            break;
+                        case KeyEvent.VK_DOWN:
+                            moved = board.move(Board.Direction.DOWN);
+                            break;
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
                 if (moved) {
                     repaint();
@@ -100,5 +104,11 @@ public class TwentyFortyEightPanel extends JPanel {
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(2 * TILE_MARGIN + 4 * TILE_SIZE, 2 * TILE_MARGIN + 4 * TILE_SIZE);
+    }
+
+    public void resetGame() {
+        board.reset();
+        repaint();
+        requestFocusInWindow();
     }
 }

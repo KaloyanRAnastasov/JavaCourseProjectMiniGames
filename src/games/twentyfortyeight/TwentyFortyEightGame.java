@@ -25,6 +25,7 @@ public class TwentyFortyEightGame extends Game {
         public void startGame() {
             System.out.println("startGame event");
             // Code to init game and game logic and to load resources
+            twentyFortyEightPanel.requestFocusInWindow(); // Set focus to the game panel
         }
     };
 
@@ -37,6 +38,10 @@ public class TwentyFortyEightGame extends Game {
         returnButton.addActionListener(this::onReturnClicked);
         panel.add(returnButton, BorderLayout.SOUTH);
 
+        JButton resetButton = new JButton("Reset Game");
+        resetButton.addActionListener(this::onResetClicked);
+        panel.add(resetButton, BorderLayout.NORTH);
+
         setStartListener(startListener);
         setEndListener(endListener);
     }
@@ -44,6 +49,12 @@ public class TwentyFortyEightGame extends Game {
     private void onReturnClicked(ActionEvent e) {
         System.out.println("Return to main menu.");
         notifyClose();
+    }
+
+    private void onResetClicked(ActionEvent e) {
+        System.out.println("Reset game.");
+        twentyFortyEightPanel.resetGame();
+        twentyFortyEightPanel.requestFocusInWindow();
     }
 
     @Override

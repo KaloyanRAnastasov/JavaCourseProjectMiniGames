@@ -9,7 +9,7 @@ public class Board {
     private Tile[][] tiles;
     private Random random;
 
-    public Board() {
+    public Board(boolean randomize) {
         tiles = new Tile[SIZE][SIZE];
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -17,15 +17,21 @@ public class Board {
             }
         }
         random = new Random();
-        addRandomTile();
-        addRandomTile();
+        if (randomize) {
+            try {
+                addRandomTile();
+                addRandomTile();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public Tile[][] getTiles() {
         return tiles;
     }
 
-    public void addRandomTile() {
+    public void addRandomTile() throws Exception {
         List<Tile> emptyTiles = new ArrayList<>();
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -37,6 +43,8 @@ public class Board {
         if (!emptyTiles.isEmpty()) {
             Tile tile = emptyTiles.get(random.nextInt(emptyTiles.size()));
             tile.setValue(random.nextInt(10) == 0 ? 4 : 2);
+        } else {
+            throw new Exception("No empty tiles available to add a new random tile.");
         }
     }
 
@@ -45,7 +53,9 @@ public class Board {
             for (int j = 0; j < SIZE; j++) {
                 if (tiles[i][j].isEmpty() ||
                         (i > 0 && tiles[i][j].getValue() == tiles[i - 1][j].getValue()) ||
-                        (j > 0 && tiles[i][j].getValue() == tiles[i][j - 1].getValue())) {
+                        (j > 0 && tiles[i][j].getValue() == tiles[i][j - 1].getValue()) ||
+                        (i < SIZE - 1 && tiles[i][j].getValue() == tiles[i + 1][j].getValue()) ||
+                        (j < SIZE - 1 && tiles[i][j].getValue() == tiles[i][j + 1].getValue())) {
                     return true;
                 }
             }
@@ -53,15 +63,21 @@ public class Board {
         return false;
     }
 
-    public boolean move(Direction direction) {
+    public boolean move(Direction direction) throws Exception {
         boolean moved = false;
-        for (int i = 0; i < SIZE; i++) {
-            Tile[] line = getLine(i, direction);
-            Tile[] mergedLine = mergeLine(moveLine(line));
-            if (!compare(line, mergedLine)) {
-                moved = true;
-                setLine(i, mergedLine, direction);
-            }
+        switch (direction) {
+            case LEFT:
+                moved = moveLeft();
+                break;
+            case RIGHT:
+                moved = moveRight();
+                break;
+            case UP:
+                moved = moveUp();
+                break;
+            case DOWN:
+                moved = moveDown();
+                break;
         }
         if (moved) {
             addRandomTile();
@@ -69,89 +85,129 @@ public class Board {
         return moved;
     }
 
-    private Tile[] getLine(int index, Direction direction) {
-        Tile[] line = new Tile[SIZE];
+    private boolean moveLeft() {
+        boolean moved = false;
         for (int i = 0; i < SIZE; i++) {
-            switch (direction) {
-                case LEFT:
-                    line[i] = tiles[index][i];
-                    break;
-                case RIGHT:
-                    line[i] = tiles[index][SIZE - 1 - i];
-                    break;
-                case UP:
-                    line[i] = tiles[i][index];
-                    break;
-                case DOWN:
-                    line[i] = tiles[SIZE - 1 - i][index];
-                    break;
+            Tile[] row = tiles[i];
+            for (int j = 1; j < SIZE; j++) {
+                if (!row[j].isEmpty()) {
+                    int k = j;
+                    while (k > 0 && row[k - 1].isEmpty()) {
+                        row[k - 1].setValue(row[k].getValue());
+                        row[k].setValue(0);
+                        k--;
+                        moved = true;
+                    }
+                    if (k > 0 && row[k - 1].getValue() == row[k].getValue() && !row[k - 1].isMerged()) {
+                        row[k - 1].setValue(row[k - 1].getValue() * 2);
+                        row[k - 1].setMerged(true);
+                        row[k].setValue(0);
+                        moved = true;
+                    }
+                }
             }
         }
-        return line;
+        resetMergedStatus();
+        return moved;
     }
 
-    private void setLine(int index, Tile[] line, Direction direction) {
+    private boolean moveRight() {
+        boolean moved = false;
         for (int i = 0; i < SIZE; i++) {
-            switch (direction) {
-                case LEFT:
-                    tiles[index][i] = line[i];
-                    break;
-                case RIGHT:
-                    tiles[index][SIZE - 1 - i] = line[i];
-                    break;
-                case UP:
-                    tiles[i][index] = line[i];
-                    break;
-                case DOWN:
-                    tiles[SIZE - 1 - i][index] = line[i];
-                    break;
+            Tile[] row = tiles[i];
+            for (int j = SIZE - 2; j >= 0; j--) {
+                if (!row[j].isEmpty()) {
+                    int k = j;
+                    while (k < SIZE - 1 && row[k + 1].isEmpty()) {
+                        row[k + 1].setValue(row[k].getValue());
+                        row[k].setValue(0);
+                        k++;
+                        moved = true;
+                    }
+                    if (k < SIZE - 1 && row[k + 1].getValue() == row[k].getValue() && !row[k + 1].isMerged()) {
+                        row[k + 1].setValue(row[k + 1].getValue() * 2);
+                        row[k + 1].setMerged(true);
+                        row[k].setValue(0);
+                        moved = true;
+                    }
+                }
             }
         }
+        resetMergedStatus();
+        return moved;
     }
 
-    private Tile[] moveLine(Tile[] oldLine) {
-        List<Tile> list = new ArrayList<>();
+    private boolean moveUp() {
+        boolean moved = false;
+        for (int j = 0; j < SIZE; j++) {
+            for (int i = 1; i < SIZE; i++) {
+                if (!tiles[i][j].isEmpty()) {
+                    int k = i;
+                    while (k > 0 && tiles[k - 1][j].isEmpty()) {
+                        tiles[k - 1][j].setValue(tiles[k][j].getValue());
+                        tiles[k][j].setValue(0);
+                        k--;
+                        moved = true;
+                    }
+                    if (k > 0 && tiles[k - 1][j].getValue() == tiles[k][j].getValue() && !tiles[k - 1][j].isMerged()) {
+                        tiles[k - 1][j].setValue(tiles[k - 1][j].getValue() * 2);
+                        tiles[k - 1][j].setMerged(true);
+                        tiles[k][j].setValue(0);
+                        moved = true;
+                    }
+                }
+            }
+        }
+        resetMergedStatus();
+        return moved;
+    }
+
+    private boolean moveDown() {
+        boolean moved = false;
+        for (int j = 0; j < SIZE; j++) {
+            for (int i = SIZE - 2; i >= 0; i--) {
+                if (!tiles[i][j].isEmpty()) {
+                    int k = i;
+                    while (k < SIZE - 1 && tiles[k + 1][j].isEmpty()) {
+                        tiles[k + 1][j].setValue(tiles[k][j].getValue());
+                        tiles[k][j].setValue(0);
+                        k++;
+                        moved = true;
+                    }
+                    if (k < SIZE - 1 && tiles[k + 1][j].getValue() == tiles[k][j].getValue() && !tiles[k + 1][j].isMerged()) {
+                        tiles[k + 1][j].setValue(tiles[k + 1][j].getValue() * 2);
+                        tiles[k + 1][j].setMerged(true);
+                        tiles[k][j].setValue(0);
+                        moved = true;
+                    }
+                }
+            }
+        }
+        resetMergedStatus();
+        return moved;
+    }
+
+    private void resetMergedStatus() {
         for (int i = 0; i < SIZE; i++) {
-            if (!oldLine[i].isEmpty()) {
-                list.add(oldLine[i]);
+            for (int j = 0; j < SIZE; j++) {
+                tiles[i][j].setMerged(false);
             }
         }
-        while (list.size() != SIZE) {
-            list.add(new Tile());
-        }
-        return list.toArray(new Tile[SIZE]);
     }
 
-    private Tile[] mergeLine(Tile[] oldLine) {
-        List<Tile> list = new ArrayList<>();
-        for (int i = 0; i < SIZE - 1; i++) {
-            if (!oldLine[i].isEmpty() && oldLine[i].getValue() == oldLine[i + 1].getValue()) {
-                oldLine[i].merge(oldLine[i + 1]);
-                list.add(oldLine[i]);
-                oldLine[i + 1] = new Tile();  // Reset merged tile
-                i++;
-            } else {
-                list.add(oldLine[i]);
+    public void reset() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                tiles[i][j].setValue(0);
+                tiles[i][j].setMerged(false);
             }
         }
-        if (list.size() < SIZE && !oldLine[SIZE - 1].isEmpty()) {
-            list.add(oldLine[SIZE - 1]);
+        try {
+            addRandomTile();
+            addRandomTile();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        while (list.size() != SIZE) {
-            list.add(new Tile());
-        }
-        return list.toArray(new Tile[SIZE]);
-    }
-
-    private boolean compare(Tile[] line1, Tile[] line2) {
-        if (line1 == line2) return true;
-        if (line1.length != line2.length) return false;
-        for (int i = 0; i < line1.length; i++) {
-            if (line1[i].getValue() != line2[i].getValue()) {
-                return false;
-            }
-        }
-        return true;
     }
 
     public enum Direction {

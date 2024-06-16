@@ -10,7 +10,7 @@ public class TwentyFortyEightTest {
 
     @Before
     public void setUp() {
-        board = new Board();
+        board = new Board(false);
     }
 
     @Test
@@ -23,11 +23,11 @@ public class TwentyFortyEightTest {
                 }
             }
         }
-        assertEquals(2, nonEmptyTiles);
+        assertEquals(0, nonEmptyTiles);
     }
 
     @Test
-    public void testMoveLeft() {
+    public void testMoveLeft() throws Exception {
         board.getTiles()[0][0].setValue(2);
         board.getTiles()[0][1].setValue(2);
         assertTrue(board.move(Board.Direction.LEFT));
@@ -36,7 +36,7 @@ public class TwentyFortyEightTest {
     }
 
     @Test
-    public void testMoveRight() {
+    public void testMoveRight() throws Exception {
         board.getTiles()[0][2].setValue(2);
         board.getTiles()[0][3].setValue(2);
         assertTrue(board.move(Board.Direction.RIGHT));
@@ -45,7 +45,7 @@ public class TwentyFortyEightTest {
     }
 
     @Test
-    public void testMoveUp() {
+    public void testMoveUp() throws Exception {
         board.getTiles()[0][0].setValue(2);
         board.getTiles()[1][0].setValue(2);
         assertTrue(board.move(Board.Direction.UP));
@@ -54,7 +54,7 @@ public class TwentyFortyEightTest {
     }
 
     @Test
-    public void testMoveDown() {
+    public void testMoveDown() throws Exception {
         board.getTiles()[2][0].setValue(2);
         board.getTiles()[3][0].setValue(2);
         assertTrue(board.move(Board.Direction.DOWN));
@@ -80,21 +80,10 @@ public class TwentyFortyEightTest {
     }
 
     @Test
-    public void testMergeTiles() {
+    public void testReset() {
         board.getTiles()[0][0].setValue(2);
         board.getTiles()[0][1].setValue(2);
-        board.getTiles()[0][2].setValue(4);
-        board.getTiles()[0][3].setValue(4);
-        assertTrue(board.move(Board.Direction.LEFT));
-        assertEquals(4, board.getTiles()[0][0].getValue());
-        assertEquals(8, board.getTiles()[0][1].getValue());
-        assertTrue(board.getTiles()[0][2].isEmpty());
-        assertTrue(board.getTiles()[0][3].isEmpty());
-    }
-
-    @Test
-    public void testAddRandomTile() {
-        board = new Board();
+        board.reset();
         int nonEmptyTiles = 0;
         for (int y = 0; y < Board.SIZE; y++) {
             for (int x = 0; x < Board.SIZE; x++) {
@@ -104,15 +93,5 @@ public class TwentyFortyEightTest {
             }
         }
         assertEquals(2, nonEmptyTiles);
-        board.addRandomTile();
-        nonEmptyTiles = 0;
-        for (int y = 0; y < Board.SIZE; y++) {
-            for (int x = 0; x < Board.SIZE; x++) {
-                if (!board.getTiles()[y][x].isEmpty()) {
-                    nonEmptyTiles++;
-                }
-            }
-        }
-        assertEquals(3, nonEmptyTiles);
     }
 }

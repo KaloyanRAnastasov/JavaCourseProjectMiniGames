@@ -2,13 +2,11 @@ package games.twentyfortyeight;
 
 public class Tile {
     private int value;
+    private boolean merged;
 
     public Tile() {
-        this.value = 0;
-    }
-
-    public boolean isEmpty() {
-        return value == 0;
+        value = 0;
+        merged = false;
     }
 
     public int getValue() {
@@ -19,8 +17,15 @@ public class Tile {
         this.value = value;
     }
 
-    public void merge(Tile other) {
-        this.value += other.value;
-        other.value = 0;
+    public boolean isEmpty() {
+        return value == 0;
+    }
+
+    public boolean isMerged() {
+        return merged;
+    }
+
+    public void setMerged(boolean merged) {
+        this.merged = merged;
     }
 }
