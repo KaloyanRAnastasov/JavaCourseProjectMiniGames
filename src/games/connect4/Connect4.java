@@ -8,15 +8,15 @@ import java.awt.event.ActionListener;
 public class Connect4 {
     private static final int ROWS = 6;
     private static final int COLUMNS = 7;
-    private static final char EMPTY_SLOT = ' ';
-    private final char[][] board;
+    private static final String EMPTY_SLOT = " ";
+    private final String[][] board;
     private final JPanel boardPanel;
-    private char currentPlayer;
+    private String currentPlayer;
 
     public Connect4() {
-        board = new char[ROWS][COLUMNS];
+        board = new String[ROWS][COLUMNS];
         boardPanel = new JPanel(new GridLayout(ROWS, COLUMNS));
-        currentPlayer = 'R';
+        currentPlayer = "Red";
 
         initializeBoard();
         updateBoard();
@@ -39,7 +39,7 @@ public class Connect4 {
     private JPanel createTopPanel() {
         JPanel topPanel = new JPanel(new GridLayout(1, COLUMNS));
         for (int i = 0; i < COLUMNS; i++) {
-            JButton columnButton = createStyledButton("Drop", i);
+            JButton columnButton = createButton("Drop", i);
             topPanel.add(columnButton);
         }
         return topPanel;
@@ -47,22 +47,18 @@ public class Connect4 {
 
     private JPanel createBottomPanel() {
         JPanel bottomPanel = new JPanel(new FlowLayout());
-        JButton returnButton = createStyledButton("Return", -1);
-        returnButton.addActionListener(this::onReturnClicked);
-        bottomPanel.add(returnButton);
 
-        JButton resetButton = createStyledButton("Reset", -1);
-        resetButton.addActionListener(this::onResetClicked);
+        JButton resetButton = createButton("Reset", -1);
+        resetButton.addActionListener(this::resetGame);
         bottomPanel.add(resetButton);
         return bottomPanel;
     }
 
-    private JButton createStyledButton(String text, int column) {
+    private JButton createButton(String text, int column) {
         JButton button = new JButton(text);
         button.setPreferredSize(new Dimension(100, 50));
         button.setFont(new Font("Times New Roman", Font.BOLD, 16));
         button.setBackground(Color.LIGHT_GRAY);
-        button.setOpaque(true);
         button.setBorderPainted(false);
         if (column >= 0) {
             button.addActionListener(new ColumnButtonListener(column));
@@ -70,7 +66,7 @@ public class Connect4 {
         return button;
     }
 
-    public void initializeBoard() {
+    void initializeBoard() {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
                 board[i][j] = EMPTY_SLOT;
@@ -78,40 +74,33 @@ public class Connect4 {
         }
     }
 
-    public void updateBoard() {
+    void updateBoard() {
         boardPanel.removeAll();
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLUMNS; col++) {
-                JPanel cell = createCell(row, col);
-                boardPanel.add(cell);
+                boardPanel.add(createCellButton(row, col));
             }
         }
         boardPanel.revalidate();
         boardPanel.repaint();
     }
 
-    private JPanel createCell(int row, int col) {
-        JPanel cell = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                if (board[row][col] == 'R') {
-                    g.setColor(Color.RED);
-                } else if (board[row][col] == 'Y') {
-                    g.setColor(Color.BLUE);
-                } else {
-                    g.setColor(Color.WHITE);
-                }
-                g.fillOval(10, 10, getWidth() - 20, getHeight() - 20);
-            }
-        };
-        cell.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        return cell;
+    private JButton createCellButton(int row, int col) {
+        JButton cellButton = new JButton();
+        cellButton.setEnabled(false);
+        cellButton.setBackground(switch (board[row][col]) {
+            case "Red" -> Color.RED;
+            case "Blue" -> Color.BLUE;
+            default -> Color.WHITE;
+        });
+        cellButton.setOpaque(true);
+        cellButton.setBorderPainted(true);
+        return cellButton;
     }
 
     public boolean placePiece(int column) {
         for (int i = ROWS - 1; i >= 0; i--) {
-            if (board[i][column] == EMPTY_SLOT) {
+            if (board[i][column].equals(EMPTY_SLOT)) {
                 board[i][column] = currentPlayer;
                 return true;
             }
@@ -119,23 +108,11 @@ public class Connect4 {
         return false;
     }
 
-    public boolean checkWin(char player) {
-        return checkHorizontalWin(player) || checkVerticalWin(player) || checkDiagonalWin(player);
+    public boolean checkWin(String player) {
+        return checkWinDirection(player, 0, 1) || checkWinDirection(player, 1, 0) || checkWinDirection(player, 1, 1) || checkWinDirection(player, 1, -1);
     }
 
-    private boolean checkHorizontalWin(char player) {
-        return checkWin(player, 0, 1);
-    }
-
-    private boolean checkVerticalWin(char player) {
-        return checkWin(player, 1, 0);
-    }
-
-    private boolean checkDiagonalWin(char player) {
-        return checkWin(player, 1, 1) || checkWin(player, 1, -1);
-    }
-
-    private boolean checkWin(char player, int rowIncrement, int colIncrement) {
+    private boolean checkWinDirection(String player, int rowIncrement, int colIncrement) {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
                 if (checkDirection(player, i, j, rowIncrement, colIncrement)) {
@@ -146,12 +123,12 @@ public class Connect4 {
         return false;
     }
 
-    private boolean checkDirection(char player, int row, int col, int rowIncrement, int colIncrement) {
+    private boolean checkDirection(String player, int row, int col, int rowIncrement, int colIncrement) {
         int count = 0;
         for (int k = 0; k < 4; k++) {
             int newRow = row + k * rowIncrement;
             int newCol = col + k * colIncrement;
-            if (newRow >= 0 && newRow < ROWS && newCol >= 0 && newCol < COLUMNS && board[newRow][newCol] == player) {
+            if (newRow >= 0 && newRow < ROWS && newCol >= 0 && newCol < COLUMNS && board[newRow][newCol].equals(player)) {
                 count++;
             } else {
                 break;
@@ -175,7 +152,7 @@ public class Connect4 {
                     JOptionPane.showMessageDialog(null, "Player " + currentPlayer + " wins!");
                     resetGame();
                 } else {
-                    currentPlayer = (currentPlayer == 'R') ? 'Y' : 'R';
+                    currentPlayer = currentPlayer.equals("Red") ? "Blue" : "Red";
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Column is full. Try another column.");
@@ -183,21 +160,14 @@ public class Connect4 {
         }
     }
 
-    void resetGame() {
+    private void resetGame(ActionEvent e) {
+        resetGame();
+    }
+
+    public void resetGame() {
         initializeBoard();
         updateBoard();
-        currentPlayer = 'R';
-    }
-
-    private void onResetClicked(ActionEvent e) {
-        resetGame();
-        System.out.println("Game reset.");
-    }
-
-    private void onReturnClicked(ActionEvent e) {
-        // Logic to switch back to the main menu
-        System.out.println("Return to main menu.");
-        // Add logic to close or navigate
+        currentPlayer = "Red";
     }
 
     public JPanel getPanel() {

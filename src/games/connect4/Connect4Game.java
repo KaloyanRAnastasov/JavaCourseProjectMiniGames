@@ -3,8 +3,8 @@ package games.connect4;
 import game.Game;
 import game.GameEndListener;
 import game.GameStartListener;
-
 import javax.swing.*;
+
 
 public class Connect4Game extends Game {
     private final Connect4 connect4;

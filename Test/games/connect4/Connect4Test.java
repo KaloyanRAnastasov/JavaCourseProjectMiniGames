@@ -7,6 +7,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Connect4Test {
 
+    private JDialog createTestDialog() {
+        JFrame frame = new JFrame();
+        return new JDialog(frame, "Test Dialog", true);
+    }
+
     @Test
     void testCreateGamePanel() {
         Connect4 game = new Connect4();
@@ -18,10 +23,10 @@ class Connect4Test {
     void testInitializeBoard() {
         Connect4 game = new Connect4();
         game.initializeBoard();
-        char[][] board = getBoard(game);
+        String[][] board = getBoard(game);
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
-                assertEquals(' ', board[i][j], "Board cell should be empty");
+                assertEquals(" ", board[i][j], "Board cell should be empty");
             }
         }
     }
@@ -47,12 +52,12 @@ class Connect4Test {
     void testCheckWin() {
         Connect4 game = new Connect4();
         // Set up a winning condition manually
-        char[][] board = getBoard(game);
+        String[][] board = getBoard(game);
         for (int i = 0; i < 4; i++) {
-            board[0][i] = 'R';
+            board[0][i] = "Red";
         }
-        assertTrue(game.checkWin('R'), "Player R should win");
-        assertFalse(game.checkWin('Y'), "Player Y should not win");
+        assertTrue(game.checkWin("Red"), "Player Red should win");
+        assertFalse(game.checkWin("Blue"), "Player Blue should not win");
     }
 
     @Test
@@ -60,10 +65,10 @@ class Connect4Test {
         Connect4 game = new Connect4();
         game.placePiece(0);
         game.resetGame();
-        char[][] board = getBoard(game);
+        String[][] board = getBoard(game);
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
-                assertEquals(' ', board[i][j], "Board cell should be empty after reset");
+                assertEquals(" ", board[i][j], "Board cell should be empty after reset");
             }
         }
     }
@@ -89,12 +94,12 @@ class Connect4Test {
         assertNotNull(icon, "Icon should not be null");
     }
 
-    private char[][] getBoard(Connect4 game) {
+    private String[][] getBoard(Connect4 game) {
         // Use reflection to access the private board field
         try {
             java.lang.reflect.Field field = Connect4.class.getDeclaredField("board");
             field.setAccessible(true);
-            return (char[][]) field.get(game);
+            return (String[][]) field.get(game);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
             fail("Unable to access board field");
