@@ -9,13 +9,14 @@ import java.awt.event.ActionEvent;
 import games.minesweeper.Minesweeper;
 
 public class MineSweeperGame extends Game {
-    private JPanel panel;
+   // private JPanel panel;
     private Minesweeper minesweeper;
 
     private GameEndListener endListener = new GameEndListener() {
         @Override
         public void endGame() {
             System.out.println("endGame event");
+            minesweeper = null;
             // here is a code to dispose game resources
         }
     };
@@ -24,18 +25,19 @@ public class MineSweeperGame extends Game {
         @Override
         public void startGame(){
             System.out.println("startGame event");
+            minesweeper = new Minesweeper();
             // here is a code to init game and game logic and to load resources
         }
 
     };
 
     public MineSweeperGame() {
-        minesweeper = new Minesweeper();
-        panel = new JPanel();
-        panel.add(new JLabel("Welcome to Game 1!"));
+
+        //panel = new JPanel();
+        //panel.add(new JLabel("Welcome to Game 1!"));
         JButton returnButton = new JButton("Return to Main Menu");
         returnButton.addActionListener(this::onReturnClicked);
-        panel.add(returnButton);
+        //panel.add(returnButton);
         setStartListener(startListener);
         setEndListener(endListener);
     }
@@ -53,7 +55,7 @@ public class MineSweeperGame extends Game {
 
     @Override
     public String getGameName() {
-        return minesweeper.getTitle();
+        return "minesweeper";
     }
 
     @Override

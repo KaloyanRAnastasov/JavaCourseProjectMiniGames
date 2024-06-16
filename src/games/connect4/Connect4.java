@@ -59,7 +59,6 @@ public class Connect4 {
         button.setPreferredSize(new Dimension(100, 50));
         button.setFont(new Font("Times New Roman", Font.BOLD, 16));
         button.setBackground(Color.LIGHT_GRAY);
-
         if (column >= 0) {
             button.addActionListener(new ColumnButtonListener(column));
         }
@@ -175,7 +174,7 @@ public class Connect4 {
     }
 
     public ImageIcon getIcon() {
-        String imagePath = "/games/connect4/logo/Connect4Logo.png";
+        String imagePath = "/games/connect4/resources/Connect4Logo.png";
         java.net.URL imgURL = getClass().getResource(imagePath);
         assert imgURL != null;
         return new ImageIcon(imgURL);

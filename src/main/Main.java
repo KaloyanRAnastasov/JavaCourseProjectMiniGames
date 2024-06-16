@@ -71,8 +71,7 @@ public class Main {
         dialog.addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e){
-                System.out.println("Dialog is opened");
-                game.notifyStart();
+
             }
 
             @Override
@@ -89,6 +88,9 @@ public class Main {
                 dialog.dispose();
             }
         });
+
+        System.out.println("Dialog is opened");
+        game.notifyStart();
 
         dialog.setSize(game.getPreferredWidth(), game.getPreferredHeight());
         dialog.setLayout(new BorderLayout());

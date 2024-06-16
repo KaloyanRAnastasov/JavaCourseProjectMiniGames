@@ -8,13 +8,14 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class SnakeGame extends Game {
-    private final Snake SnakeGame;
+    private  Snake SnakeGame = null;
 
 
     private GameEndListener endListener = new GameEndListener() {
         @Override
         public void endGame() {
             System.out.println("endGame event");
+            SnakeGame = null;
             // here is a code to dispose game resources
         }
     };
@@ -23,13 +24,14 @@ public class SnakeGame extends Game {
         @Override
         public void startGame(){
             System.out.println("startGame event");
+            SnakeGame = new Snake();
             // here is a code to init game and game logic and to load resources
         }
 
     };
 
     public SnakeGame() {
-        SnakeGame = new Snake();
+
         setStartListener(startListener);
         setEndListener(endListener);
     }

@@ -8,12 +8,13 @@ import java.awt.event.ActionEvent;
 import games.tictactoe.TicTacToe;
 
 public class TicTacToeGame extends  Game {
-    private final TicTacToe ticTacToe;
+    private TicTacToe ticTacToe;
 
     private final GameEndListener endListener = new GameEndListener() {
         @Override
         public void endGame() {
             System.out.println("endGame event");
+            ticTacToe = null;
             // here is a code to dispose game resources
         }
     };
@@ -22,6 +23,7 @@ public class TicTacToeGame extends  Game {
         @Override
         public void startGame() {
             System.out.println("startGame event");
+            ticTacToe = new TicTacToe();
             // here is a code to init game and game logic and to load resources
 
         }
@@ -29,7 +31,6 @@ public class TicTacToeGame extends  Game {
     };
 
     public TicTacToeGame() {
-        ticTacToe = new TicTacToe();
         setStartListener(startListener);
         setEndListener(endListener);
 

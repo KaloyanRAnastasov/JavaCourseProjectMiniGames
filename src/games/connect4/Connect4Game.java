@@ -7,12 +7,13 @@ import javax.swing.*;
 
 
 public class Connect4Game extends Game {
-    private final Connect4 connect4;
+    private Connect4 connect4;
 
     private final GameEndListener endListener = new GameEndListener() {
         @Override
         public void endGame() {
             System.out.println("endGame event");
+            connect4 = null;
             // Dispose game resources if necessary
         }
     };
@@ -21,13 +22,13 @@ public class Connect4Game extends Game {
         @Override
         public void startGame() {
             System.out.println("startGame event");
+            connect4 = new Connect4();
             // Initialize game logic and resources
-            connect4.resetGame();
+            //connect4.resetGame();
         }
     };
 
     public Connect4Game() {
-        connect4 = new Connect4();
         setStartListener(startListener);
         setEndListener(endListener);
     }
@@ -39,12 +40,15 @@ public class Connect4Game extends Game {
 
     @Override
     public String getGameName() {
-        return connect4.getTitle();
+        return "connect4";
     }
 
     @Override
     public ImageIcon getGameIcon() {
-        return connect4.getIcon();
+        String imagePath = "/games/connect4/resources/Connect4Logo.png";
+        java.net.URL imgURL = getClass().getResource(imagePath);
+        assert imgURL != null;
+        return new ImageIcon(imgURL);
     }
 
     @Override

@@ -3,6 +3,8 @@ package game;
 import javax.swing.*;
 
 public abstract class Game {
+
+
     protected GameCloseListener closeListener;
     protected GameStartListener startListener;
     protected GameEndListener endListener;
