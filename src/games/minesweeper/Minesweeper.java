@@ -2,23 +2,18 @@ package games.minesweeper;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Random;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Random;
 
 public class Minesweeper extends JFrame {
     private static final int SIZE = 10;
     private static final int MINES = 10;
-    private JPanel panel;
-    private JButton[][] buttons;
-    private boolean[][] mines;
-    private boolean[][] revealed;
-    private boolean[][] flagged;
+    private final JPanel panel;
+    private final JButton[][] buttons;
+    private final boolean[][] mines;
+    private final boolean[][] revealed;
+    private final boolean[][] flagged;
 
     public Minesweeper() {
         setTitle("Minesweeper");
@@ -86,8 +81,8 @@ public class Minesweeper extends JFrame {
 
 
     private class ButtonMouseListener extends MouseAdapter {
-        private int x;
-        private int y;
+        private final int x;
+        private final int y;
 
         public ButtonMouseListener(int x, int y) {
             this.x = x;

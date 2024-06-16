@@ -12,6 +12,7 @@ public class TwentyFortyEightPanel extends JPanel {
 
     public TwentyFortyEightPanel() {
         setFocusable(true);
+        requestFocusInWindow();
         board = new Board(true);
         addKeyListener(new KeyAdapter() {
             @Override

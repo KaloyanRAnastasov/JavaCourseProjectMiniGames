@@ -8,6 +8,7 @@ public abstract class Game {
     protected GameCloseListener closeListener;
     protected GameStartListener startListener;
     protected GameEndListener endListener;
+    protected GameOnShowListener showListener;
 
     public abstract JPanel getGamePanel();
     public abstract String getGameName();
@@ -17,6 +18,14 @@ public abstract class Game {
 
     public void setCloseListener(GameCloseListener listener) {
         this.closeListener = listener;
+    }
+    public void setShowListener(GameOnShowListener listener) {
+        this.showListener = listener;
+    }
+    public void notifyOpen() {
+        if (showListener != null) {
+            showListener.onShowGame();
+        }
     }
     protected void notifyClose() {
         if (closeListener != null) {

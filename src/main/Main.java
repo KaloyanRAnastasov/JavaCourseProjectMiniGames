@@ -1,9 +1,7 @@
 package main;
 
 import game.Game;
-import game.GameCloseListener;
 import game.GameManager;
-import org.json.JSONObject;
 import ui.gamelist.GameCellRenderer;
 import ui.menu.SetupDialog;
 
@@ -16,7 +14,6 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 
 public class Main {
-    private JSONObject jo;
     private static JFrame frame;
     private static List<Game> games;
 
@@ -37,31 +34,38 @@ public class Main {
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("Options");
         JMenuItem setupMenuItem = new JMenuItem("Setup");
-        setupMenuItem.addActionListener(e -> showSetupDialog());
+        setupMenuItem.addActionListener(_ -> showSetupDialog());
         menu.add(setupMenuItem);
         menuBar.add(menu);
         frame.setJMenuBar(menuBar);
 
-        games = GameManager.loadGames();
-        JList<Game> gameList = new JList<>(new DefaultListModel<>());
-        for (Game game : games) {
-            ((DefaultListModel<Game>) gameList.getModel()).addElement(game);
-        }
-        gameList.setCellRenderer(new GameCellRenderer());
-        gameList.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent evt) {
-                if (evt.getClickCount() == 2) {
-                    int index = gameList.locationToIndex(evt.getPoint());
-                    if (index != -1) {
-                        openGameInModalFrame(games.get(index));
+        try {
+            games = GameManager.loadGames();
+            JList<Game> gameList = new JList<>(new DefaultListModel<>());
+            for (Game game : games) {
+                ((DefaultListModel<Game>) gameList.getModel()).addElement(game);
+            }
+            gameList.setCellRenderer(new GameCellRenderer());
+            gameList.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent evt) {
+                    if (evt.getClickCount() == 2) {
+                        int index = gameList.locationToIndex(evt.getPoint());
+                        if (index != -1) {
+                            openGameInModalFrame(games.get(index));
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        JScrollPane scrollPane = new JScrollPane(gameList);
-        frame.add(scrollPane, BorderLayout.CENTER);
-        frame.setVisible(true);
+            JScrollPane scrollPane = new JScrollPane(gameList);
+            frame.add(scrollPane, BorderLayout.CENTER);
+            frame.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(frame, "Failed to load games", "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+        }
+
     }
 
     private static void openGameInModalFrame(Game game) {
@@ -71,6 +75,7 @@ public class Main {
         dialog.addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e){
+                game.notifyOpen();
 
             }
 
@@ -82,12 +87,7 @@ public class Main {
             }
         });
 
-        game.setCloseListener(new GameCloseListener() {
-            @Override
-            public void closeGame() {
-                dialog.dispose();
-            }
-        });
+        game.setCloseListener(dialog::dispose);
 
         System.out.println("Dialog is opened");
         game.notifyStart();

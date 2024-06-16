@@ -2,47 +2,70 @@ package games.twentyfortyeight;
 
 import game.Game;
 import game.GameEndListener;
+import game.GameOnShowListener;
 import game.GameStartListener;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class TwentyFortyEightGame extends Game {
     private JPanel panel;
     private TwentyFortyEightPanel twentyFortyEightPanel;
 
-    private GameEndListener endListener = new GameEndListener() {
-        @Override
-        public void endGame() {
-            System.out.println("endGame event");
-            // Code to dispose game resources
-        }
-    };
-
-    private GameStartListener startListener = new GameStartListener() {
-        @Override
-        public void startGame() {
-            System.out.println("startGame event");
-            // Code to init game and game logic and to load resources
-            twentyFortyEightPanel.requestFocusInWindow(); // Set focus to the game panel
-        }
-    };
 
     public TwentyFortyEightGame() {
-        twentyFortyEightPanel = new TwentyFortyEightPanel();
-        panel = new JPanel(new BorderLayout());
-        panel.add(twentyFortyEightPanel, BorderLayout.CENTER);
 
-        JButton returnButton = new JButton("Return to Main Menu");
-        returnButton.addActionListener(this::onReturnClicked);
-        panel.add(returnButton, BorderLayout.SOUTH);
+        GameOnShowListener showListener = new GameOnShowListener() {
+            @Override
+            public void onShowGame() {
+                System.out.println("onShowGame event");
+                twentyFortyEightPanel.requestFocusInWindow();
+            }
+        };
+        setShowListener(showListener);
+        GameStartListener startListener = new GameStartListener() {
+            @Override
+            public void startGame() {
+                System.out.println("startGame event");
 
-        JButton resetButton = new JButton("Reset Game");
-        resetButton.addActionListener(this::onResetClicked);
-        panel.add(resetButton, BorderLayout.NORTH);
+                twentyFortyEightPanel = new TwentyFortyEightPanel();
+                panel = new JPanel(new BorderLayout());
+                panel.add(twentyFortyEightPanel, BorderLayout.CENTER);
 
+                JButton returnButton = new JButton("Return to Main Menu");
+                returnButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        onReturnClicked(e);
+                    }
+                });
+                panel.add(returnButton, BorderLayout.SOUTH);
+
+                JButton resetButton = new JButton("Reset Game");
+                resetButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        onResetClicked(e);
+                    }
+                });
+                panel.add(resetButton, BorderLayout.NORTH);
+
+            }
+        };
         setStartListener(startListener);
+        // Code to dispose game resources
+        GameEndListener endListener = new GameEndListener() {
+            @Override
+            public void endGame() {
+                System.out.println("endGame event");
+                panel.removeAll();
+                twentyFortyEightPanel = null;
+
+                // Code to dispose game resources
+            }
+        };
         setEndListener(endListener);
     }
 
