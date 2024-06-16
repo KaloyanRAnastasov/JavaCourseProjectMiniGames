@@ -59,7 +59,7 @@ public class Connect4 {
         button.setPreferredSize(new Dimension(100, 50));
         button.setFont(new Font("Times New Roman", Font.BOLD, 16));
         button.setBackground(Color.LIGHT_GRAY);
-        button.setBorderPainted(false);
+
         if (column >= 0) {
             button.addActionListener(new ColumnButtonListener(column));
         }
@@ -93,8 +93,7 @@ public class Connect4 {
             case "Blue" -> Color.BLUE;
             default -> Color.WHITE;
         });
-        cellButton.setOpaque(true);
-        cellButton.setBorderPainted(true);
+
         return cellButton;
     }
 
@@ -124,17 +123,14 @@ public class Connect4 {
     }
 
     private boolean checkDirection(String player, int row, int col, int rowIncrement, int colIncrement) {
-        int count = 0;
         for (int k = 0; k < 4; k++) {
             int newRow = row + k * rowIncrement;
             int newCol = col + k * colIncrement;
-            if (newRow >= 0 && newRow < ROWS && newCol >= 0 && newCol < COLUMNS && board[newRow][newCol].equals(player)) {
-                count++;
-            } else {
-                break;
+            if (newRow < 0 || newRow >= ROWS || newCol < 0 || newCol >= COLUMNS || !board[newRow][newCol].equals(player)) {
+                return false;
             }
         }
-        return count == 4;
+        return true;
     }
 
     private class ColumnButtonListener implements ActionListener {
