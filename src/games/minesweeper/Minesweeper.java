@@ -7,13 +7,17 @@ import java.awt.event.MouseEvent;
 import java.util.Random;
 
 public class Minesweeper extends JFrame {
-    private static final int SIZE = 10;
-    private static final int MINES = 10;
+    private static final int sizeOfSide = 10;
+    private static final int minesNumber = 25;
     private final JPanel panel;
     private final JButton[][] buttons;
     private final boolean[][] mines;
     private final boolean[][] revealed;
     private final boolean[][] flagged;
+
+    int sizeSquare = sizeOfSide * sizeOfSide;
+
+
 
     public Minesweeper() {
         setTitle("Minesweeper");
@@ -22,14 +26,14 @@ public class Minesweeper extends JFrame {
         setLayout(new BorderLayout());
 
         panel = new JPanel();
-        panel.setLayout(new GridLayout(SIZE, SIZE));
-        buttons = new JButton[SIZE][SIZE];
-        mines = new boolean[SIZE][SIZE];
-        revealed = new boolean[SIZE][SIZE];
-        flagged = new boolean[SIZE][SIZE];
+        panel.setLayout(new GridLayout(sizeOfSide, sizeOfSide));
+        buttons = new JButton[sizeOfSide][sizeOfSide];
+        mines = new boolean[sizeOfSide][sizeOfSide];
+        revealed = new boolean[sizeOfSide][sizeOfSide];
+        flagged = new boolean[sizeOfSide][sizeOfSide];
 
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
+        for (int i = 0; i < sizeOfSide; i++) {
+            for (int j = 0; j < sizeOfSide; j++) {
                 buttons[i][j] = new JButton();
                 buttons[i][j].addMouseListener(new ButtonMouseListener(i, j));
                 panel.add(buttons[i][j]);
@@ -43,10 +47,14 @@ public class Minesweeper extends JFrame {
     private void placeMines() {
         Random random = new Random();
         int placedMines = 0;
+        if(minesNumber >= sizeSquare) {
+            throw new IllegalArgumentException("Number of mines is greater than the number of cells");
+        }
 
-        while (placedMines < MINES) {
-            int x = random.nextInt(SIZE);
-            int y = random.nextInt(SIZE);
+
+        while (placedMines < minesNumber) {
+            int x = random.nextInt(sizeOfSide);
+            int y = random.nextInt(sizeOfSide);
 
             if (!mines[x][y]) {
                 mines[x][y] = true;
@@ -57,11 +65,11 @@ public class Minesweeper extends JFrame {
 
 
     public static int getCurrentSize() {
-        return SIZE;
+        return sizeOfSide;
     }
 
     public static int getMines() {
-        return MINES;
+        return minesNumber;
     }
     public JButton[][] getButtons() {
         return buttons;
@@ -94,7 +102,9 @@ public class Minesweeper extends JFrame {
             if (SwingUtilities.isRightMouseButton(e)) {
                 if (!revealed[x][y]) {
                     flagged[x][y] = !flagged[x][y];
+                    buttons[x][y].setBackground(flagged[x][y] ? Color.yellow : null);
                     buttons[x][y].setText(flagged[x][y] ? "F" : "");
+
                 }
             } else if (SwingUtilities.isLeftMouseButton(e)) {
                 if (flagged[x][y]) {
@@ -114,7 +124,7 @@ public class Minesweeper extends JFrame {
     }
 
     public void reveal(int x, int y) {
-        if (x < 0 || x >= SIZE || y < 0 || y >= SIZE || revealed[x][y]) {
+        if (x < 0 || x >= sizeOfSide || y < 0 || y >= sizeOfSide || revealed[x][y]) {
             return;
         }
 
@@ -145,7 +155,7 @@ public class Minesweeper extends JFrame {
                 int nx = x + i;
                 int ny = y + j;
 
-                if (nx >= 0 && nx < SIZE && ny >= 0 && ny < SIZE && mines[nx][ny]) {
+                if (nx >= 0 && nx < sizeOfSide && ny >= 0 && ny < sizeOfSide && mines[nx][ny]) {
                     count++;
                 }
             }
@@ -156,8 +166,8 @@ public class Minesweeper extends JFrame {
 
 
     private void revealAllMines() {
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
+        for (int i = 0; i < sizeOfSide; i++) {
+            for (int j = 0; j < sizeOfSide; j++) {
                 if (mines[i][j]) {
                     buttons[i][j].setText("X");
                     buttons[i][j].setBackground(Color.RED);
@@ -171,8 +181,8 @@ public class Minesweeper extends JFrame {
 
     private void checkWinCondition() {
         int revealedCells = 0;
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
+        for (int i = 0; i < sizeOfSide; i++) {
+            for (int j = 0; j < sizeOfSide; j++) {
                 if (revealed[i][j]) {
                     revealedCells++;
                 }
@@ -180,7 +190,7 @@ public class Minesweeper extends JFrame {
         }
 
 
-        if (revealedCells == SIZE * SIZE - MINES) {
+        if (revealedCells == sizeOfSide * sizeOfSide - minesNumber) {
             JOptionPane.showMessageDialog(null, "You Win!");
         }
     }
