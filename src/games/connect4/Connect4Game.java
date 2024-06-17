@@ -1,41 +1,29 @@
 package games.connect4;
 
 import game.Game;
-import game.GameEndListener;
-import game.GameStartListener;
 import javax.swing.*;
-
 
 public class Connect4Game extends Game {
     private Connect4 connect4;
 
-    private final GameEndListener endListener = new GameEndListener() {
-        @Override
-        public void endGame() {
-            System.out.println("endGame event");
-            connect4 = null;
-            // Dispose game resources if necessary
-        }
-    };
-
-    private final GameStartListener startListener = new GameStartListener() {
-        @Override
-        public void startGame() {
-            System.out.println("startGame event");
-            connect4 = new Connect4();
-            // Initialize game logic and resources
-            //connect4.resetGame();
-        }
-    };
-
     public Connect4Game() {
-        setStartListener(startListener);
-        setEndListener(endListener);
+        setStartListener(this::startGame);
+        setEndListener(this::endGame);
+    }
+
+    private void startGame() {
+        System.out.println("startGame event");
+        connect4 = new Connect4();
+    }
+
+    private void endGame() {
+        System.out.println("endGame event");
+        connect4 = null;
     }
 
     @Override
     public JPanel getGamePanel() {
-        return connect4.createGamePanel();
+        return connect4 != null ? connect4.createGamePanel() : new JPanel();
     }
 
     @Override

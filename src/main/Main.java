@@ -34,7 +34,7 @@ public class Main {
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("Options");
         JMenuItem setupMenuItem = new JMenuItem("Setup");
-        setupMenuItem.addActionListener(_ -> showSetupDialog());
+        setupMenuItem.addActionListener(e -> showSetupDialog());
         menu.add(setupMenuItem);
         menuBar.add(menu);
         frame.setJMenuBar(menuBar);

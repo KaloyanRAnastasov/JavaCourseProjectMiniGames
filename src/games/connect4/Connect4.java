@@ -97,6 +97,9 @@ public class Connect4 {
     }
 
     public boolean placePiece(int column) {
+        if (column < 0 || column >= COLUMNS) {
+            return false;
+        }
         for (int i = ROWS - 1; i >= 0; i--) {
             if (board[i][column].equals(EMPTY_SLOT)) {
                 board[i][column] = currentPlayer;
@@ -107,29 +110,38 @@ public class Connect4 {
     }
 
     public boolean checkWin(String player) {
-        return checkWinDirection(player, 0, 1) || checkWinDirection(player, 1, 0) || checkWinDirection(player, 1, 1) || checkWinDirection(player, 1, -1);
+        return checkWinDirection(player, 0, 1) ||
+                checkWinDirection(player, 1, 0) ||
+                checkWinDirection(player, 1, 1) ||
+                checkWinDirection(player, 1, -1);
     }
 
     private boolean checkWinDirection(String player, int rowIncrement, int colIncrement) {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
-                if (checkDirection(player, i, j, rowIncrement, colIncrement)) {
-                    return true;
+                boolean win = true;
+                for (int k = 0; k < 4; k++) {
+                    int newRow = i + k * rowIncrement;
+                    int newCol = j + k * colIncrement;
+                    if (newRow < 0 || newRow >= ROWS || newCol < 0 || newCol >= COLUMNS || !board[newRow][newCol].equals(player)) {
+                        win = false;
+                        break;
+                    }
                 }
+                if (win) return true;
             }
         }
         return false;
     }
 
-    private boolean checkDirection(String player, int row, int col, int rowIncrement, int colIncrement) {
-        for (int k = 0; k < 4; k++) {
-            int newRow = row + k * rowIncrement;
-            int newCol = col + k * colIncrement;
-            if (newRow < 0 || newRow >= ROWS || newCol < 0 || newCol >= COLUMNS || !board[newRow][newCol].equals(player)) {
-                return false;
-            }
-        }
-        return true;
+    public void resetGame() {
+        initializeBoard();
+        updateBoard();
+        currentPlayer = "Red";
+    }
+
+    private void resetGame(ActionEvent e) {
+        resetGame();
     }
 
     private class ColumnButtonListener implements ActionListener {
@@ -153,16 +165,6 @@ public class Connect4 {
                 JOptionPane.showMessageDialog(null, "Column is full. Try another column.");
             }
         }
-    }
-
-    private void resetGame(ActionEvent e) {
-        resetGame();
-    }
-
-    public void resetGame() {
-        initializeBoard();
-        updateBoard();
-        currentPlayer = "Red";
     }
 
     public JPanel getPanel() {

@@ -17,7 +17,7 @@ public class TicTacToeTest  {
 
     @Test
     public void testFirstTurn() {
-        assertTrue(ticTacToe.player_turn);
+        assertTrue(ticTacToe.isPlayer_turn());
     }
 
     @Test
@@ -28,33 +28,33 @@ public class TicTacToeTest  {
     @Test
     public void testPauseGame() {
         ticTacToe.pauseGame();
-        assertTrue(ticTacToe.gamePaused);
+        assertTrue(ticTacToe.isGamePaused());
     }
 
     @Test
     public void testResumeGame() {
         ticTacToe.pauseGame();
         ticTacToe.resumeGame();
-        assertFalse(ticTacToe.gamePaused);
+        assertFalse(ticTacToe.isGamePaused());
     }
 
     @Test
     public void testXWins() {
-        ticTacToe.buttons[0].setText("X");
-        ticTacToe.buttons[1].setText("X");
-        ticTacToe.buttons[2].setText("X");
+        ticTacToe.getButtons()[0].setText("X");
+        ticTacToe.getButtons()[1].setText("X");
+        ticTacToe.getButtons()[2].setText("X");
         ticTacToe.check();
-        assertEquals("X wins", ticTacToe.textfield.getText());
-        assertEquals(Color.GREEN, ticTacToe.buttons[0].getBackground());
+        assertEquals("X wins", ticTacToe.getTextfield().getText());
+        assertEquals(Color.GREEN, ticTacToe.getButtons()[0].getBackground());
     }
 
     @Test
     public void testOWins() {
-        ticTacToe.buttons[0].setText("O");
-        ticTacToe.buttons[3].setText("O");
-        ticTacToe.buttons[6].setText("O");
+        ticTacToe.getButtons()[0].setText("O");
+        ticTacToe.getButtons()[3].setText("O");
+        ticTacToe.getButtons()[6].setText("O");
         ticTacToe.check();
-        assertEquals("O wins", ticTacToe.textfield.getText());
-        assertEquals(Color.GREEN, ticTacToe.buttons[0].getBackground());
+        assertEquals("O wins", ticTacToe.getTextfield().getText());
+        assertEquals(Color.GREEN, ticTacToe.getButtons()[0].getBackground());
     }
 }

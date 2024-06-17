@@ -38,20 +38,19 @@ class Connect4Test {
         game.updateBoard();
         JPanel panel = game.getPanel();
         assertNotNull(panel, "Board panel should not be null");
-        // Additional checks for graphical elements could be added
     }
 
     @Test
     void testPlacePiece() {
         Connect4 game = new Connect4();
         assertTrue(game.placePiece(0), "Piece should be placed successfully");
+        assertFalse(game.placePiece(-1), "Piece should not be placed out of bounds");
         assertFalse(game.placePiece(7), "Piece should not be placed out of bounds");
     }
 
     @Test
     void testCheckWin() {
         Connect4 game = new Connect4();
-        // Set up a winning condition manually
         String[][] board = getBoard(game);
         for (int i = 0; i < 4; i++) {
             board[0][i] = "Red";
@@ -95,7 +94,6 @@ class Connect4Test {
     }
 
     private String[][] getBoard(Connect4 game) {
-        // Use reflection to access the private board field
         try {
             java.lang.reflect.Field field = Connect4.class.getDeclaredField("board");
             field.setAccessible(true);
